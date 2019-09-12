@@ -1,5 +1,6 @@
 package com.bolsadeideas.springboot.app;
 
+import com.bolsadeideas.springboot.app.auth.handler.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,9 @@ public class SpringSecurityConfig  extends  WebSecurityConfigurerAdapter{
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    @Autowired
+    private LoginSuccessHandler successHandler;
 
     @Autowired
     public void confugurerGlobal(AuthenticationManagerBuilder builder) throws Exception {
@@ -39,7 +43,8 @@ public class SpringSecurityConfig  extends  WebSecurityConfigurerAdapter{
                 .antMatchers("/factura/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login").permitAll()
+                .formLogin().successHandler(successHandler)
+                    .loginPage("/login").permitAll()
                 .and()
                 .logout().permitAll()
                 .and()
