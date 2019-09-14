@@ -1,6 +1,7 @@
 package com.bolsadeideas.springboot.app;
 
 import com.bolsadeideas.springboot.app.auth.handler.LoginSuccessHandler;
+import com.bolsadeideas.springboot.app.models.service.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,13 +27,19 @@ public class SpringSecurityConfig  extends  WebSecurityConfigurerAdapter{
     private LoginSuccessHandler successHandler;
 
     @Autowired
+    private JpaUserDetailsService userDetailsService;
+
+    @Autowired
     public void confugurerGlobal(AuthenticationManagerBuilder builder) throws Exception {
-        PasswordEncoder encoder = passwordEncoder();
+       /* PasswordEncoder encoder = passwordEncoder();
         UserBuilder users = User.builder().passwordEncoder(encoder::encode);//utilizacion de expresion lambda  password -> encoder.encode(password)
 
         builder.inMemoryAuthentication()
                 .withUser(users.username("admin").password("12345").roles("ADMIN","USER"))
-                .withUser(users.username("jesus").password("12345").roles("USER"));
+                .withUser(users.username("jesus").password("12345").roles("USER"));*/
+
+       builder.userDetailsService(userDetailsService)
+               .passwordEncoder(passwordEncoder());
     }
 
     @Override
