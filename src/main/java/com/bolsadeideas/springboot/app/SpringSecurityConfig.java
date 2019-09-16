@@ -1,6 +1,7 @@
 package com.bolsadeideas.springboot.app;
 
 import com.bolsadeideas.springboot.app.auth.handler.LoginSuccessHandler;
+import com.bolsadeideas.springboot.app.auth.handler.filter.JWTAuthenticationFilter;
 import com.bolsadeideas.springboot.app.models.service.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -51,12 +53,16 @@ public class SpringSecurityConfig  extends  WebSecurityConfigurerAdapter{
                 //.antMatchers("/eliminar/**").hasAnyRole("ADMIN")
                 //.antMatchers("/factura/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()
-                .and()
+                /*.and()
                 .formLogin().successHandler(successHandler)
                     .loginPage("/login").permitAll()
                 .and()
                 .logout().permitAll()
                 .and()
-                .exceptionHandling().accessDeniedPage("/error_403");
+                .exceptionHandling().accessDeniedPage("/error_403")*/
+                .and()
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//deshabilitar el uso de sesion
     }
 }
