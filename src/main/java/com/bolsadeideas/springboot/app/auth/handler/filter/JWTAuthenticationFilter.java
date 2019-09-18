@@ -41,7 +41,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
 
         if (password == null) {
-            password = "";
+            password = ""; 
         }
 
         if(username != null && password != null){
