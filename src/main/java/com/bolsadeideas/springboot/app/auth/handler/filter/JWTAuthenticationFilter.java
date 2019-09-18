@@ -1,5 +1,6 @@
 package com.bolsadeideas.springboot.app.auth.handler.filter;
 
+import com.bolsadeideas.springboot.app.models.entity.Usuario;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,6 +47,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         if(username != null && password != null){
             logger.info("Username desde request parameter (form-data)".concat(username));
             logger.info("Password desde request parameter (form-data)".concat(password));
+
+        }
+        else{
+            Usuario user = null;
+            try {
+                 user = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
+
+                 username = user.getUsername();
+                 password = user.getPassword();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         username = username.trim();
 
